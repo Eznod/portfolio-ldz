@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucas Donzé — Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg2: #10101a;
+            --surface: #14141f;
+            --border: rgba(255,255,255,0.07);
+            --accent: #6c63ff;
+            --accent2: #ff6b6b;
+            --accent-glow: rgba(108,99,255,0.25);
+            --text: #e8e8f0;
+            --muted: #7a7a96;
+            --white: #ffffff;
+            --radius: 16px;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.7; }
+        a { text-decoration: none; color: inherit; }
+        ul { list-style: none; }
+        img { max-width: 100%; display: block; }
+
+        .container { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 2rem; }
+        section { padding: 7rem 0; }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+
+        .section-label { font-family: 'DM Sans', sans-serif; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+        .section-title { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--white); line-height: 1.15; margin-bottom: 3.5rem; }
+        .section-title span { color: var(--accent); }
+
+        nav { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1.25rem 0; transition: var(--transition); }
+        nav.scrolled { background: rgba(10,10,15,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0.9rem 0; }
+        .nav-inner { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.25rem; color: var(--white); letter-spacing: -0.02em; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 2.5rem; align-items: center; }
+        .nav-link { font-size: 0.9rem; font-weight: 500; color: var(--muted); transition: var(--transition); }
+        .nav-link:hover { color: var(--white); }
+        .nav-cta { background: var(--accent); color: var(--white) !important; padding: 0.55rem 1.25rem; border-radius: 8px; font-weight: 600; font-size: 0.85rem; transition: var(--transition); }
+        .nav-cta:hover { background: #5a52e0; transform: translateY(-1px); }
+        .menu-btn { display: none; background: none; border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; }
+
+        #hero { min-height: 100vh; display: flex; align-items: center; position: relative; overflow: hidden; padding-top: 5rem; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.6rem; background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.3); border-radius: 100px; padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 500; color: var(--accent); margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+        .hero-eyebrow::before { content: ''; width: 7px; height: 7px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.7); } }
+        .hero-name { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.0; color: var(--white); letter-spacing: -0.04em; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.25s forwards; }
+        .hero-name .accent { color: var(--accent); }
+        .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 480px; line-height: 1.75; margin-bottom: 2.5rem; opacity: 0; animation: fadeUp 0.6s ease 0.4s forwards; }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.6s ease 0.55s forwards; }
+
+        .btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: var(--white); padding: 0.8rem 1.75rem; border-radius: 10px; font-weight: 600; font-size: 0.95rem; transition: var(--transition); border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+        .btn-primary:hover { background: #5a52e0; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(108,99,255,0.35); }
+        .btn-primary:disabled { opacity: 0.65; cursor: not-allowed; transform: none; box-shadow: none; }
+        .btn-ghost { display: inline-flex; align-items: center; gap: 0.5rem; border: 1px solid var(--border); color: var(--text); padding: 0.8rem 1.75rem; border-radius: 10px; font-weight: 500; font-size: 0.95rem; transition: var(--transition); }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+        .hero-socials { display: flex; gap: 1rem; opacity: 0; animation: fadeUp 0.6s ease 0.7s forwards; }
+        .social-link { width: 42px; height: 42px; border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1rem; transition: var(--transition); }
+        .social-link:hover { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,0.1); }
+        .hero-visual { position: relative; opacity: 0; animation: fadeIn 0.8s ease 0.6s forwards; }
+        .hero-photo-wrap { position: relative; border-radius: 24px; overflow: hidden; max-width: 340px; margin-left: auto; }
+        .hero-photo-wrap img { width: 100%; aspect-ratio: 4/5; object-fit: cover; object-position: center top; display: block; }
+        .hero-photo-wrap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(10,10,15,0.7) 100%); }
+        .hero-badge { position: absolute; bottom: 1.5rem; left: 1.5rem; z-index: 2; background: rgba(10,10,15,0.85); backdrop-filter: blur(10px); border: 1px solid var(--border); border-radius: 12px; padding: 0.85rem 1.25rem; }
+        .hero-badge strong { display: block; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--white); }
+        .hero-badge span { font-size: 0.8rem; color: var(--muted); }
+        .orb { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; }
+        .orb-1 { width: 500px; height: 500px; background: rgba(108,99,255,0.12); top: -100px; right: -100px; }
+        .orb-2 { width: 350px; height: 350px; background: rgba(255,107,107,0.07); bottom: 50px; left: -80px; }
+
+        #about { background: var(--bg2); position: relative; }
+        .about-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 5rem; align-items: start; }
+        .about-text p { color: var(--muted); font-size: 1.05rem; margin-bottom: 1.5rem; }
+        .about-text p strong { color: var(--text); font-weight: 500; }
+        .skills-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 2rem; }
+        .skill-tag { display: flex; align-items: center; gap: 0.5rem; padding: 0.45rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-weight: 500; color: var(--text); transition: var(--transition); }
+        .skill-tag:hover { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,0.08); }
+        .skill-tag i { font-size: 1rem; }
+        .about-stats { display: flex; flex-direction: column; gap: 1.25rem; }
+        .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: var(--transition); }
+        .stat-card:hover { border-color: rgba(108,99,255,0.3); }
+        .stat-card .stat-num { font-family: 'Syne', sans-serif; font-size: 2.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+        .stat-card .stat-label { font-size: 0.85rem; color: var(--muted); margin-top: 0.25rem; }
+
+        #projects { background: var(--bg); }
+        .projects-list { display: flex; flex-direction: column; gap: 1.5rem; }
+        .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: var(--transition); display: grid; grid-template-columns: 380px 1fr; }
+        .project-card:hover { border-color: rgba(108,99,255,0.3); transform: translateY(-3px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+        .project-img { height: 260px; overflow: hidden; position: relative; }
+        .project-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .project-card:hover .project-img img { transform: scale(1.06); }
+        .project-img-placeholder { width: 100%; height: 100%; background: linear-gradient(135deg, var(--bg2) 0%, var(--surface) 100%); display: flex; align-items: center; justify-content: center; }
+        .project-img-placeholder i { font-size: 3rem; color: var(--accent); opacity: 0.4; }
+        .project-body { padding: 2rem; display: flex; flex-direction: column; }
+        .project-year { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+        .project-name { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--white); margin-bottom: 0.75rem; }
+        .project-desc { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem; flex: 1; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .project-tag { padding: 0.3rem 0.75rem; background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.2); border-radius: 6px; font-size: 0.75rem; font-weight: 600; color: var(--accent); }
+        .project-actions { display: flex; gap: 1rem; }
+        .project-link { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 0.85rem; font-weight: 600; color: var(--muted); transition: var(--transition); padding: 0.45rem 0; }
+        .project-link:hover { color: var(--accent); }
+
+        #alternance { background: var(--bg2); position: relative; overflow: hidden; }
+        #alternance::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+        .alternance-header { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; margin-bottom: 3.5rem; }
+        .company-badge { display: flex; align-items: center; gap: 1.25rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.75rem; white-space: nowrap; }
+        .company-logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--accent), #9c94ff); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: white; flex-shrink: 0; }
+        .company-info strong { display: block; font-family: 'Syne', sans-serif; font-weight: 700; color: var(--white); font-size: 1.05rem; }
+        .company-info span { font-size: 0.8rem; color: var(--muted); }
+        .feature-mission { position: relative; background: linear-gradient(145deg, rgba(108,99,255,0.08), var(--surface) 55%); border: 1px solid rgba(108,99,255,0.3); border-radius: var(--radius); padding: 2.5rem; margin-bottom: 2.5rem; overflow: hidden; }
+        .feature-mission::before { content: ''; position: absolute; top: -60px; right: -60px; width: 220px; height: 220px; background: rgba(108,99,255,0.15); border-radius: 50%; filter: blur(60px); pointer-events: none; }
+        .feature-badge { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.35); border-radius: 100px; padding: 0.35rem 0.9rem; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.25rem; }
+        .feature-body { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2.5rem; align-items: center; position: relative; z-index: 1; }
+        .feature-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.6rem; color: var(--white); margin-bottom: 0.9rem; }
+        .feature-desc { color: var(--muted); font-size: 0.98rem; line-height: 1.75; margin-bottom: 1.5rem; }
+        .feature-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem; }
+        .feature-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        .feature-stat { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; text-align: center; }
+        .feature-stat .num { font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--accent); line-height: 1; }
+        .feature-stat .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 0.35rem; }
+        @media (max-width: 900px) { .feature-body { grid-template-columns: 1fr; } }
+ 
+        .missions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        .mission-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; transition: var(--transition); position: relative; overflow: hidden; }
+        .mission-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); opacity: 0; transition: var(--transition); }
+        .mission-card:hover { border-color: rgba(108,99,255,0.25); transform: translateY(-4px); }
+        .mission-card:hover::before { opacity: 1; }
+        .mission-icon { width: 44px; height: 44px; background: rgba(108,99,255,0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: var(--accent); margin-bottom: 1.25rem; }
+        .mission-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; color: var(--white); margin-bottom: 0.75rem; }
+        .mission-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
+        .mission-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+        .mission-tag { font-size: 0.72rem; padding: 0.2rem 0.6rem; background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.15); border-radius: 5px; color: var(--accent); font-weight: 600; }
+        .alternance-summary { margin-top: 2rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .alt-stat { text-align: center; }
+        .alt-stat .num { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--accent); }
+        .alt-stat .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+
+        #education { background: var(--bg); }
+        .timeline { position: relative; max-width: 740px; }
+        .timeline::before { content: ''; position: absolute; top: 0; bottom: 0; left: 20px; width: 1px; background: linear-gradient(to bottom, var(--accent), transparent); }
+        .tl-item { display: flex; gap: 2rem; margin-bottom: 2.5rem; opacity: 0; transform: translateX(-20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .tl-item.visible { opacity: 1; transform: translateX(0); }
+        .tl-dot { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--surface); border: 2px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; color: var(--accent); position: relative; z-index: 1; }
+        .tl-content { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; flex: 1; transition: var(--transition); }
+        .tl-content:hover { border-color: rgba(108,99,255,0.3); }
+        .tl-date { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+        .tl-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--white); margin-bottom: 0.5rem; }
+        .tl-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.65; }
+
+        #contact { background: var(--bg2); position: relative; overflow: hidden; }
+        #contact::after { content: ''; position: absolute; bottom: -200px; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(108,99,255,0.08) 0%, transparent 70%); pointer-events: none; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+        .contact-items { display: flex; flex-direction: column; gap: 1.25rem; }
+        .contact-item { display: flex; align-items: center; gap: 1rem; }
+        .ci-icon { width: 42px; height: 42px; background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: var(--accent); flex-shrink: 0; }
+        .ci-text small { display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; }
+        .ci-text strong { font-size: 0.95rem; color: var(--text); font-weight: 400; }
+        .contact-form-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-label { display: block; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem; }
+        .form-control { width: 100%; padding: 0.75rem 1rem; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem; transition: var(--transition); }
+        .form-control::placeholder { color: rgba(122,122,150,0.5); }
+        .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(108,99,255,0.1); }
+        textarea.form-control { min-height: 120px; resize: vertical; }
+        .form-feedback { display: none; margin-top: 1.25rem; padding: 1rem 1.25rem; border-radius: 10px; font-size: 0.9rem; align-items: center; gap: 0.75rem; }
+        .form-feedback.success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.35); color: #6ee7b7; }
+        .form-feedback.error { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
+
+        footer { background: var(--bg); border-top: 1px solid var(--border); padding: 2.5rem 0; }
+        .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+        .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--white); }
+        .footer-logo span { color: var(--accent); }
+        .footer-links { display: flex; gap: 2rem; }
+        .footer-link { font-size: 0.85rem; color: var(--muted); transition: var(--transition); }
+        .footer-link:hover { color: var(--white); }
+        .footer-copy { font-size: 0.8rem; color: var(--muted); }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 2000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s ease; }
+        .modal.show { display: flex; opacity: 1; }
+        .modal-box { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; width: 90%; max-width: 820px; max-height: 88vh; overflow-y: auto; transform: translateY(-20px); transition: transform 0.3s ease; }
+        .modal.show .modal-box { transform: translateY(0); }
+        .modal-head { padding: 1.75rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--surface); z-index: 1; }
+        .modal-head h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.25rem; color: var(--white); }
+        .modal-close-btn { width: 36px; height: 36px; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; transition: var(--transition); font-size: 1rem; }
+        .modal-close-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+        .modal-bd { padding: 2rem; }
+        .modal-img { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; margin-bottom: 1.75rem; }
+        .modal-section { margin-bottom: 1.75rem; }
+        .modal-section h4 { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--white); margin-bottom: 0.75rem; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.06em; }
+        .modal-section p, .modal-section li { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 0.75rem; }
+        .modal-section li { margin-bottom: 0.5rem; }
+        .modal-techs { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .modal-tech { padding: 0.35rem 0.85rem; background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.2); border-radius: 6px; font-size: 0.8rem; font-weight: 600; color: var(--accent); }
+        .modal-foot { padding: 1.25rem 2rem; border-top: 1px solid var(--border); display: flex; gap: 1rem; }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s ease, transform 0.65s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 900px) {
+            .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+            .hero-visual { order: -1; }
+            .hero-photo-wrap { max-width: 380px; margin: 0 auto; }
+            .missions-grid { grid-template-columns: 1fr 1fr; }
+            .alternance-header { grid-template-columns: 1fr; }
+            .alternance-summary { grid-template-columns: 1fr 1fr; }
+            .project-card { grid-template-columns: 1fr; }
+            .project-img { height: 220px; }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; background: rgba(10,10,15,0.97); border-bottom: 1px solid var(--border); padding: 1.5rem; gap: 1.25rem; }
+            .nav-links.open { display: flex; }
+            .menu-btn { display: block; }
+        }
+        @media (max-width: 600px) {
+            .missions-grid { grid-template-columns: 1fr; }
+            .alternance-summary { grid-template-columns: 1fr 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .hero-actions { flex-direction: column; }
+            .footer-inner { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="navbar">
+    <div class="container">
+        <div class="nav-inner">
+            <a href="#hero" class="logo">Lucas <span>Donzé</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about" class="nav-link">À propos</a></li>
+                <li><a href="#projects" class="nav-link">Projets</a></li>
+                <li><a href="#alternance" class="nav-link">Alternance</a></li>
+                <li><a href="#education" class="nav-link">Parcours</a></li>
+                <li><a href="#contact" class="nav-cta nav-link">Contact</a></li>
+            </ul>
+            <button class="menu-btn" id="menuBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+        </div>
+    </div>
+</nav>
+
+<section id="hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="container">
+        <div class="hero-grid">
+            <div class="hero-text">
+                <div class="hero-eyebrow">Disponible en alternance</div>
+                <h1 class="hero-name">Lucas<br><span class="accent">Donzé</span></h1>
+                <p class="hero-desc">Étudiant en BUT Réseaux &amp; Télécommunications, passionné par l'informatique sous toutes ses formes. En alternance chez MGS Informatique, j'apprends à administrer et sécuriser des infrastructures réseau au contact du terrain. Toujours curieux, j'aime aussi expérimenter de mon côté pour progresser au-delà des cours. </p>
+                <div class="hero-actions">
+                    <a href="#projects" class="btn-primary"><i class="fas fa-folder-open"></i> Voir mes projets</a>
+                    <a href="#contact" class="btn-ghost"><i class="fas fa-paper-plane"></i> Me contacter</a>
+                </div>
+                <div class="hero-socials">
+                    <a href="https://github.com/Eznod" target="_blank" rel="noopener" class="social-link" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/lucas-donze-754bb1330/" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-photo-wrap">
+                    <img src="images/image.jpg" alt="Lucas Donzé" onerror="this.style.display='none'; this.parentElement.innerHTML+='<div style=\'background:linear-gradient(135deg,#14141f,#1e1e2e);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;\'><i class=\'fas fa-user\' style=\'font-size:5rem;color:#6c63ff;opacity:0.3\'></i></div>'">
+                    <div class="hero-badge">
+                        <strong>BUT R&amp;T — 2ème année</strong>
+                        <span>IUT de Blois · Alternance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-text reveal">
+                <p class="section-label">Qui suis-je</p>
+                <h2 class="section-title">Passionné par les<br><span>réseaux & la sécurité</span></h2>
+                <p>Étudiant en 2ème année de <strong>BUT Réseaux &amp; Télécommunications</strong> à l'IUT de Blois, actuellement en alternance chez MGS Informatique. Je m'intéresse particulièrement aux systèmes et réseaux, ainsi qu'à l'administration système. La cybersécurité est également un domaine qui me passionne et que j'aime approfondir.</p>
+                <p>Curieux et autodidacte, j'approfondis mes connaissances en dehors des cours. Mon objectif : évoluer vers un poste <strong> d'ingénieur systèmes et réseaux </strong>, en développant mes compétences pour répondre aux besoins concrets des entreprises.</p>
+                <p>En dehors, je pratique le <strong>tennis depuis plus de 12 ans</strong> — une discipline qui m'a appris la rigueur, la persévérance et l'esprit de compétition.</p>
+                <div class="skills-grid">
+                    <div class="skill-tag"><i class="fab fa-html5" style="color:#e34f26"></i> HTML/CSS</div>
+                    <div class="skill-tag"><i class="fab fa-js" style="color:#f7df1e"></i> JavaScript</div>
+                    <div class="skill-tag"><i class="fab fa-python" style="color:#3572a5"></i> Python</div>
+                    <div class="skill-tag"><i class="fas fa-network-wired" style="color:#6c63ff"></i> Réseaux</div>
+                    <div class="skill-tag"><i class="fas fa-database" style="color:#336791"></i> SQL</div>
+                    <div class="skill-tag"><i class="fas fa-shield-alt" style="color:#ff6b6b"></i> Cybersécurité</div>
+                    <div class="skill-tag"><i class="fab fa-linux" style="color:#fcc624"></i> Linux</div>
+                    <div class="skill-tag"><i class="fas fa-server" style="color:#6c63ff"></i> Administration</div>
+                </div>
+            </div>
+            <div class="about-stats reveal">
+                <div class="stat-card"><div class="stat-num">2</div><div class="stat-label">Années de BUT R&T</div></div>
+                <div class="stat-card"><div class="stat-num">12+</div><div class="stat-label">Années de tennis</div></div>
+                <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Curiosité pour la tech</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ PROJETS ═══════════ -->
+<section id="projects">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-label">Réalisations</p>
+            <h2 class="section-title">Mes <span>Projets</span></h2>
+        </div>
+        <div class="projects-list">
+
+            <!-- PROJET 1 : LucasTech -->
+            <div class="project-card reveal">
+                <div class="project-img">
+                    <img src="images/sae201.png" alt="LucasTech Network" onerror="this.parentElement.innerHTML='<div class=project-img-placeholder><i class=fas\ fa-network-wired></i></div>'">
+                </div>
+                <div class="project-body">
+                    <p class="project-year">SAE201 — 2024/2025</p>
+                    <h3 class="project-name">Réseau d'entreprise "LucasTech"</h3>
+                    <p class="project-desc">Conception et simulation complète d'un réseau d'entreprise avec son FAI. Architecture sécurisée intégrant VLANs dédiés par service, pare-feu, DMZ, services internes (DNS, DHCP, Web) et accès SSH administré.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">Cisco Packet Tracer</span>
+                        <span class="project-tag">VLAN / VLSM</span>
+                        <span class="project-tag">ACL</span>
+                        <span class="project-tag">NAT/PAT</span>
+                        <span class="project-tag">DMZ</span>
+                        <span class="project-tag">SSH</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="#" class="project-link details-btn" data-modal="modal1"><i class="fas fa-info-circle"></i> Détails du projet</a>
+                        <a href="pdf/SAE201 Rapport Donzé Lucas TPC.pdf" class="project-link" target="_blank"><i class="fas fa-file-pdf"></i> Rapport PDF</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROJET 2 : Chat SAE302 -->
+            <div class="project-card reveal">
+                <div class="project-img">
+                    <img src="images/chat-app.png" alt="Application Chat SAE302" onerror="this.parentElement.innerHTML='<div class=project-img-placeholder style=background:linear-gradient(135deg,#0a0a0f,#16213e)><i class=fab\ fa-discord style=font-size:3rem;color:#6c63ff;opacity:.5></i></div>'">
+                </div>
+                <div class="project-body">
+                    <p class="project-year">SAE302 — 2024/2025</p>
+                    <h3 class="project-name">Application Chat type Discord</h3>
+                    <p class="project-desc">Application de messagerie instantanée Client/Serveur en Java. Architecture multi-threadée avec authentification BDD MariaDB, messagerie privée, groupes de discussion, annuaire des connectés et protocole réseau TCP maison.</p>
+                    <div class="project-tags">
+                        <span class="project-tag">Java</span>
+                        <span class="project-tag">Sockets TCP</span>
+                        <span class="project-tag">Multi-threading</span>
+                        <span class="project-tag">Swing</span>
+                        <span class="project-tag">MariaDB</span>
+                        <span class="project-tag">JDBC</span>
+                    </div>
+                    <div class="project-actions">
+                        <a href="#" class="project-link details-btn" data-modal="modal2"><i class="fas fa-info-circle"></i> Détails du projet</a>
+                        <a href="https://github.com/Eznod" class="project-link" target="_blank" rel="noopener"><i class="fab fa-github"></i> Voir le code</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ MODAL 1 : LucasTech ═══════════ -->
+<div class="modal" id="modal1">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h3>Réseau d'entreprise "LucasTech"</h3>
+            <button class="modal-close-btn" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-bd">
+            <img src="images/sae201.png" alt="Réseau LucasTech" class="modal-img" onerror="this.style.display='none'">
+            <div class="modal-section">
+                <h4>Description — SAE201</h4>
+                <p>Dans le cadre de la SAE201, j'ai conçu de A à Z un réseau informatique pour une entreprise fictive nommée <strong>LucasTech</strong>, entièrement simulé sous Cisco Packet Tracer.</p>
+                <p>Chaque service (RH, comptabilité, direction, marketing…) dispose de son propre VLAN pour garantir isolation et sécurité. L'adressage IP a été optimisé via le VLSM. L'architecture repose sur une topologie redondante avec plusieurs switchs 2960 et un routeur 2901 assurant le routage inter-VLAN ainsi que la connexion à un FAI simulé.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Technologies utilisées</h4>
+                <div class="modal-techs">
+                    <span class="modal-tech">Cisco Packet Tracer</span><span class="modal-tech">VLAN</span><span class="modal-tech">ACL</span><span class="modal-tech">NAT / PAT</span><span class="modal-tech">DMZ</span><span class="modal-tech">VLSM</span><span class="modal-tech">SSH</span><span class="modal-tech">DHCP / DNS</span>
+                </div>
+            </div>
+            <div class="modal-section">
+                <h4>Défis & solutions</h4>
+                <p><strong style="color:var(--text)">Isolation des services :</strong> VLANs dédiés avec ACLs inter-VLAN et déploiement d'une DMZ pour les services exposés à Internet.</p>
+                <p><strong style="color:var(--text)">Connexion FAI :</strong> Configuration d'un réseau FAI fictif, mise en place de NAT, PAT et routage statique.</p>
+                <p><strong style="color:var(--text)">Accès distant :</strong> SSH sécurisé sur un VLAN d'administration dédié.</p>
+            </div>
+
+            <div class="modal-section">
+                <h4>Bilan du projet</h4>
+                <p>Ce projet m'a permis de développer mes compétences en architecture réseau, en sécurité, en gestion des services réseau (DHCP, DNS, Web), et en administration à distance. Il m'a également offert une vision concrète de la conception d'un réseau professionnel, même à petite échelle.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Apprentissages</h4>
+                <ul>
+                    <li>✅ Comprendre l'architecture des systèmes numériques et les principes du codage de l'information.</li>
+                    <li>✅ Configurer les fonctions de base du réseau local</li>
+                    <li>✅ Maîtriser les rôles et les principes fondamentaux des systèmes d'exploitation afin d'interagir avec ceux-ci</li>
+                    <li>✅ Identifier les dysfonctionnements du réseau local</li>
+                    <li>✅ Installer un poste client</li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <a href="pdf/SAE201 Rapport Donzé Lucas TPC.pdf" class="btn-ghost" target="_blank"><i class="fas fa-file-pdf"></i> Rapport complet</a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ MODAL 2 : Chat SAE302 ═══════════ -->
+<div class="modal" id="modal2">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h3>Application Chat type Discord — SAE302</h3>
+            <button class="modal-close-btn" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-bd">
+            <img src="images/chat-app.png" alt="Capture Chat SAE302" class="modal-img" onerror="this.style.display='none'">
+            <div class="modal-section">
+                <h4>Description — SAE302</h4>
+                <p>Application de messagerie instantanée développée en Java dans le cadre de la SAE302, inspirée de Discord. Elle repose sur une architecture <strong>Client/Serveur</strong> avec communication en temps réel via <strong>Sockets TCP</strong>.</p>
+                <p>L'interface se décompose en trois colonnes : la liste des connectés et groupes à gauche, la zone de discussion au centre, et un annuaire des utilisateurs à droite. Fonctionnalités : <strong>broadcast global</strong>, <strong>messagerie privée</strong>, <strong>création de groupes</strong>, <strong>invitation d'utilisateurs</strong> et <strong>déconnexion propre</strong>.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Architecture technique</h4>
+                <p><strong style="color:var(--text)">Serveur (ServeurChat.java) :</strong> Écoute sur le port 12345. Un thread Handler indépendant est instancié par client. Une HashMap synchronisée associe chaque pseudonyme à son flux de sortie, permettant le routage des messages privés et le broadcast global.</p>
+                <p><strong style="color:var(--text)">Client IHM (Connexion.java + Fenetre.java) :</strong> La fenêtre de login gère l'authentification via Socket. La fenêtre principale lance un thread de réception en arrière-plan — toutes les modifications de l'UI transitent par <code style="color:var(--accent)">SwingUtilities.invokeLater()</code>.</p>
+                <p><strong style="color:var(--text)">Base de données (Database.java) :</strong> Classe utilitaire encapsulant la connexion JDBC MariaDB. Chaque message est archivé avec horodatage automatique.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Protocole réseau maison</h4>
+                <ul>
+                    <li><code style="color:var(--accent)">LOGIN:user:password</code> → Authentification</li>
+                    <li><code style="color:var(--accent)">AUTH_OK</code> / <code style="color:var(--accent)">AUTH_FAILED</code> → Réponse serveur</li>
+                    <li><code style="color:var(--accent)">TOUT LE MONDE:message</code> → Broadcast global</li>
+                    <li><code style="color:var(--accent)">Alice:message</code> → Message privé vers Alice</li>
+                    <li><code style="color:var(--accent)">UPDATE_LIST:Alice,Bob,Lucas</code> → Mise à jour annuaire</li>
+                </ul>
+            </div>
+            <div class="modal-section">
+                <h4>Technologies utilisées</h4>
+                <div class="modal-techs">
+                    <span class="modal-tech">Java 17</span>
+                    <span class="modal-tech">Sockets TCP</span>
+                    <span class="modal-tech">Multi-threading</span>
+                    <span class="modal-tech">Swing / AWT</span>
+                    <span class="modal-tech">MariaDB</span>
+                    <span class="modal-tech">JDBC</span>
+                    <span class="modal-tech">PreparedStatement</span>
+                    <span class="modal-tech">HashMap synchronisée</span>
+                </div>
+            </div>
+            <div class="modal-section">
+                <h4>Défis & solutions</h4>
+                <p><strong style="color:var(--text)">Thread-safety :</strong> La HashMap des clients est partagée entre tous les threads Handler. Chaque accès est protégé par <code style="color:var(--accent)">synchronized</code> pour éviter les race conditions lors des connexions/déconnexions simultanées.</p>
+                <p><strong style="color:var(--text)">Interface non bloquante :</strong> La réception des messages est déportée dans un thread secondaire. Les modifications de l'UI passent obligatoirement par <code style="color:var(--accent)">SwingUtilities.invokeLater()</code>.</p>
+                <p><strong style="color:var(--text)">Sécurité SQL :</strong> Utilisation exclusive de <code style="color:var(--accent)">PreparedStatement</code> pour prévenir toute injection SQL lors de l'authentification et de l'archivage.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Apprentissages</h4>
+                <ul>
+                    <li>✅ Concevoir une architecture Client/Serveur TCP multi-clients</li>
+                    <li>✅ Gérer la concurrence avec threads et blocs synchronized</li>
+                    <li>✅ Interfacer Java avec MariaDB via JDBC</li>
+                    <li>✅ Définir un protocole applicatif textuel sur mesure</li>
+                    <li>✅ Développer une IHM Swing réactive sans bloquer l'interface</li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal-foot">
+            <a href="https://github.com/Eznod" class="btn-ghost" target="_blank" rel="noopener"><i class="fab fa-github"></i> Voir le code source</a>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════ ALTERNANCE ═══════════ -->
+<section id="alternance">
+    <div class="container">
+        <div class="alternance-header reveal">
+            <div>
+                <p class="section-label">Expérience professionnelle</p>
+                <h2 class="section-title">Mon <span>Alternance</span><br>chez MGS Informatique</h2>
+            </div>
+            <div class="company-badge">
+                <div class="company-logo-icon"><i class="fas fa-server"></i></div>
+                <div class="company-info">
+                    <strong>MGS Informatique</strong>
+                    <span>Blois · 2025 — Présent</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="feature-mission reveal">
+            <div class="feature-badge"><i class="fas fa-star"></i> Mission phare</div>
+            <div class="feature-body">
+                <div>
+                    <h3 class="feature-title">Renouvellement d'une infrastructure virtualisée client</h3>
+                    <p class="feature-desc">Préparation de bout en bout d'une nouvelle infrastructure pour un client : deux serveurs Dell PowerEdge, cluster VMware ESXi/vCenter, stockage QNAP redondant et sauvegardes Veeam avec immuabilité anti-ransomware. Un projet structuré en 4 phases dépendantes, entièrement testé en atelier avant mise en production.</p>
+                    <div class="feature-tags">
+                        <span class="project-tag">VMware ESXi</span>
+                        <span class="project-tag">vCenter</span>
+                        <span class="project-tag">Veeam</span>
+                        <span class="project-tag">QNAP / RAID</span>
+                        <span class="project-tag">Dell iDRAC</span>
+                        <span class="project-tag">Aruba LACP</span>
+                    </div>
+                    <a href="#" class="btn-primary details-btn" data-modal="modalMissionInfra"><i class="fas fa-info-circle"></i> Voir le détail complet</a>
+                </div>
+                <div class="feature-stats">
+                    <div class="feature-stat"><div class="num">4</div><div class="lbl">Phases du projet</div></div>
+                    <div class="feature-stat"><div class="num">2</div><div class="lbl">Serveurs Dell R660xs</div></div>
+                    <div class="feature-stat"><div class="num">2</div><div class="lbl">NAS QNAP</div></div>
+                    <div class="feature-stat"><div class="num">0</div><div class="lbl">Perte de données</div></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="missions-grid">
+            <div class="mission-card reveal">
+                <div class="mission-icon"><i class="fas fa-network-wired"></i></div>
+                <h3 class="mission-title">Administration réseau</h3>
+                <p class="mission-desc">Configuration et maintenance des équipements réseau (switches, routeurs, points d'accès Wi-Fi) chez les clients. Mise en place de VLANs et surveillance du trafic.</p>
+                <div class="mission-tags"><span class="mission-tag">Switches</span><span class="mission-tag">VLAN</span><span class="mission-tag">Wi-Fi</span></div>
+            </div>
+            <div class="mission-card reveal">
+                <div class="mission-icon"><i class="fas fa-desktop"></i></div>
+                <h3 class="mission-title">Support & maintenance</h3>
+                <p class="mission-desc">Intervention sur site et à distance pour résoudre les incidents matériels et logiciels. Diagnostic de pannes, remplacement de composants, mise à jour de systèmes.</p>
+                <div class="mission-tags"><span class="mission-tag">Windows</span><span class="mission-tag">Linux</span><span class="mission-tag">Ticketing</span></div>
+            </div>
+            <div class="mission-card reveal">
+                <div class="mission-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3 class="mission-title">Sécurité informatique</h3>
+                <p class="mission-desc">Participation à la mise en place de politiques de sécurité, configuration de pare-feu et antivirus, sensibilisation des utilisateurs aux bonnes pratiques.</p>
+                <div class="mission-tags"><span class="mission-tag">Firewall</span><span class="mission-tag">VPN</span><span class="mission-tag">Antivirus</span></div>
+            </div>
+            <div class="mission-card reveal">
+                <div class="mission-icon"><i class="fas fa-cloud"></i></div>
+                <h3 class="mission-title">Infrastructure & serveurs</h3>
+                <p class="mission-desc">Installation et configuration de serveurs Windows Server et Linux. Gestion des sauvegardes, des utilisateurs et des droits d'accès en environnement Active Directory.</p>
+                <div class="mission-tags"><span class="mission-tag">Windows Server</span><span class="mission-tag">Active Directory</span><span class="mission-tag">Backup</span></div>
+            </div>
+            <div class="mission-card reveal">
+                <div class="mission-icon"><i class="fas fa-tools"></i></div>
+                <h3 class="mission-title">Déploiement & installation</h3>
+                <p class="mission-desc">Préparation et déploiement de postes de travail (images systèmes, profils utilisateurs). Installation de logiciels métiers et intégration au domaine.</p>
+                <div class="mission-tags"><span class="mission-tag">Sysprep</span><span class="mission-tag">GPO</span><span class="mission-tag">DHCP/DNS</span></div>
+            </div>
+            <div class="mission-card reveal">
+                <div class="mission-icon"><i class="fas fa-headset"></i></div>
+                <h3 class="mission-title">Relation client</h3>
+                <p class="mission-desc">Échanges directs avec les clients afin de les aider à résoudre leur problème et de leur expliquer les solutions mises en place.</p>
+                <div class="mission-tags"><span class="mission-tag">Conseil</span><span class="mission-tag">Documentation</span><span class="mission-tag">Reporting</span></div>
+            </div>
+        </div>
+        <div class="alternance-summary reveal">
+            <div class="alt-stat"><div class="num">2 ans</div><div class="lbl">Durée du contrat</div></div>
+            <div class="alt-stat"><div class="num">6s/3s</div><div class="lbl">Rythme alternance</div></div>
+            <div class="alt-stat"><div class="num">Divers</div><div class="lbl">Type de clients</div></div>
+            <div class="alt-stat"><div class="num">Blois</div><div class="lbl">Localisation</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ MODAL MISSION ALTERNANCE : Infrastructure VMware ═══════════ -->
+<div class="modal" id="modalMissionInfra">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h3>Renouvellement d'infrastructure virtualisée — MGS Informatique</h3>
+            <button class="modal-close-btn" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-bd">
+            <div class="modal-section">
+                <h4>Contexte</h4>
+                <p>Un client souhaitait renouveler son environnement de virtualisation VMware et le faire évoluer vers la version 8.0.3. Le projet prévoyait le remplacement des hyperviseurs par deux nouveaux serveurs <strong style="color:var(--text)">Dell PowerEdge R660xs</strong>, le déploiement de machines virtuelles sous Windows Server 2025, l'extension du stockage via deux <strong style="color:var(--text)">NAS QNAP</strong>, ainsi que le renforcement du réseau avec deux switchs Aruba en stack et agrégation de liens LACP.</p>
+                <p>J'ai piloté la préparation complète de cette infrastructure en atelier, en environnement isolé du réseau de production, avant sa mise en service chez le client.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Démarche en 4 phases</h4>
+                <p><strong style="color:var(--text)">1. Fiabilisation du socle matériel :</strong> mise à jour des firmwares des switchs Aruba, mise à jour des serveurs Dell via iDRAC, création des disques virtuels en RAID 5, configuration et mise à jour des NAS QNAP.</p>
+                <p><strong style="color:var(--text)">2. Construction de la couche de virtualisation :</strong> configuration réseau des hôtes ESXi, déploiement d'une VM DNS (prérequis indispensable), installation du vCenter, puis création du cluster réunissant les deux hôtes.</p>
+                <p><strong style="color:var(--text)">3. Résilience des sauvegardes :</strong> configuration des pools de stockage QNAP (RAID 1 pour le système, RAID 6 pour la donnée), puis mise en place d'un espace de stockage immuable de type Object Storage (S3 / WORM) pour protéger les sauvegardes contre les ransomwares.</p>
+                <p><strong style="color:var(--text)">4. Validation de bout en bout :</strong> déploiement de l'appliance Veeam Backup & Replication, intégration des repositories immuables et du vCenter, puis lancement d'un premier job de sauvegarde complet pour valider toute la chaîne avant mise en production.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Technologies utilisées</h4>
+                <div class="modal-techs">
+                    <span class="modal-tech">VMware ESXi</span><span class="modal-tech">vCenter</span><span class="modal-tech">Dell iDRAC</span><span class="modal-tech">RAID 1/5/6</span><span class="modal-tech">Veeam Backup & Replication</span><span class="modal-tech">QNAP / Object Storage S3</span><span class="modal-tech">Switchs Aruba (LACP)</span><span class="modal-tech">DNS Windows Server</span>
+                </div>
+            </div>
+            <div class="modal-section">
+                <h4>Défis & solutions</h4>
+                <p><strong style="color:var(--text)">Dépendances techniques :</strong> le déploiement du vCenter nécessitait un DNS fonctionnel, lui-même dépendant d'un socle matériel fiabilisé. J'ai structuré les 4 phases dans un ordre strict pour respecter ces contraintes.</p>
+                <p><strong style="color:var(--text)">Protection anti-ransomware :</strong> mise en place du principe WORM (Write Once, Read Many) sur le stockage QNAP, garantissant que les sauvegardes ne peuvent être ni modifiées ni supprimées pendant leur période de rétention, même par un compte administrateur compromis.</p>
+            </div>
+            <div class="modal-section">
+                <h4>Apprentissages</h4>
+                <ul>
+                    <li>✅ Déploiement et administration d'un cluster VMware (ESXi / vCenter)</li>
+                    <li>✅ Gestion du stockage RAID et des repositories de sauvegarde</li>
+                    <li>✅ Mise en œuvre de sauvegardes immuables contre les ransomwares (Veeam)</li>
+                    <li>✅ Structuration d'un projet technique en phases selon les dépendances</li>
+                    <li>✅ Administration à distance de serveurs physiques (iDRAC)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<!-- ═══════════ EDUCATION ═══════════ -->
+<section id="education">
+    <div class="container">
+        <div class="reveal">
+            <p class="section-label">Mon Parcours</p>
+            <h2 class="section-title">Formation &amp; <span>Diplômes</span></h2>
+        </div>
+        <div class="timeline">
+            <div class="tl-item">
+                <div class="tl-dot"><i class="fas fa-graduation-cap"></i></div>
+                <div class="tl-content">
+                    <p class="tl-date">2025 — Présent</p>
+                    <h3 class="tl-title">BUT R&T — 2ème année · Alternance chez MGS Informatique</h3>
+                    <p class="tl-desc">Deuxième année du BUT Réseaux &amp; Télécommunications en alternance chez MGS Informatique à Blois. Approfondissement des compétences réseau, sécurité et systèmes.</p>
+                </div>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot"><i class="fas fa-network-wired"></i></div>
+                <div class="tl-content">
+                    <p class="tl-date">2024 — 2025</p>
+                    <h3 class="tl-title">BUT Réseaux &amp; Télécommunications — IUT de Blois</h3>
+                    <p class="tl-desc">Première année de BUT R&T. Formation axée sur les réseaux informatiques, les télécommunications et l'informatique, mêlant théorie et pratique à travers des TD, TP et SAE</p>
+                </div>
+            </div>
+            <div class="tl-item">
+                <div class="tl-dot"><i class="fas fa-school"></i></div>
+                <div class="tl-content">
+                    <p class="tl-date">2023 — 2024</p>
+                    <h3 class="tl-title">Lycée Jeanne d'Albret — Baccalauréat</h3>
+                    <p class="tl-desc">Obtention du Baccalauréat <strong style="color:var(--text)">Mention Bien</strong> avec les spécialités Mathématiques et NSI (Numérique et Sciences Informatiques).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="reveal">
+                <p class="section-label">Contact</p>
+                <h2 class="section-title">Travaillons<br><span>ensemble</span></h2>
+                <p style="color:var(--muted);margin-bottom:2rem">Vous avez un projet, une opportunité ou simplement envie d'échanger ? N'hésitez pas à me contacter.</p>
+                <div class="contact-items">
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="ci-text"><small>Localisation</small><strong>Blois / Paris</strong></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fas fa-envelope"></i></div>
+                        <div class="ci-text"><small>Email</small><strong>lucasdonze892@gmail.com</strong></div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="ci-icon"><i class="fas fa-phone-alt"></i></div>
+                        <div class="ci-text"><small>Téléphone</small><strong>07 72 30 91 70</strong></div>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form-wrap reveal">
+                <form id="contactForm" action="https://formspree.io/f/mzdkkggl" method="POST" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="cf-name">Nom</label>
+                            <input id="cf-name" type="text" name="name" class="form-control" placeholder="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cf-email">Email</label>
+                            <input id="cf-email" type="email" name="email" class="form-control" placeholder="votre@email.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cf-subject">Sujet</label>
+                        <input id="cf-subject" type="text" name="subject" class="form-control" placeholder="Sujet de votre message">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="cf-message">Message</label>
+                        <textarea id="cf-message" name="message" class="form-control" placeholder="Votre message…" required></textarea>
+                    </div>
+                    <button type="submit" id="submitBtn" class="btn-primary" style="width:100%;justify-content:center">
+                        <i class="fas fa-paper-plane" id="btnIcon"></i>
+                        <span id="btnText">Envoyer le message</span>
+                    </button>
+                    <div id="formSuccess" class="form-feedback success">
+                        <i class="fas fa-check-circle"></i> Message envoyé ! Je te répondrai dès que possible.
+                    </div>
+                    <div id="formError" class="form-feedback error">
+                        <i class="fas fa-exclamation-circle"></i> Une erreur s'est produite. Contacte-moi à lucasdonze892@gmail.com
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <div class="footer-inner">
+            <div class="footer-logo">Lucas <span>Donzé</span></div>
+            <div class="footer-links">
+                <a href="#about" class="footer-link">À propos</a>
+                <a href="#projects" class="footer-link">Projets</a>
+                <a href="#alternance" class="footer-link">Alternance</a>
+                <a href="#education" class="footer-link">Parcours</a>
+            </div>
+            <p class="footer-copy">© 2026 Lucas Donzé — Tous droits réservés</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    document.getElementById('menuBtn').addEventListener('click', () => {
+        document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const el = document.querySelector(a.getAttribute('href'));
+            if (el) {
+                e.preventDefault();
+                window.scrollTo({ top: el.offsetTop - 70, behavior: 'smooth' });
+                document.getElementById('navLinks').classList.remove('open');
+            }
+        });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal, .tl-item').forEach(el => observer.observe(el));
+
+    document.querySelectorAll('.details-btn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            e.preventDefault();
+            const modal = document.getElementById(btn.dataset.modal);
+            if (modal) { modal.classList.add('show'); document.body.style.overflow = 'hidden'; }
+        });
+    });
+    document.querySelectorAll('.modal-close-btn').forEach(btn => {
+        btn.addEventListener('click', () => { btn.closest('.modal').classList.remove('show'); document.body.style.overflow = ''; });
+    });
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', e => { if (e.target === modal) { modal.classList.remove('show'); document.body.style.overflow = ''; } });
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') document.querySelectorAll('.modal.show').forEach(m => { m.classList.remove('show'); document.body.style.overflow = ''; });
+    });
+
+    // Formspree
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn       = document.getElementById('submitBtn');
+            const btnText   = document.getElementById('btnText');
+            const btnIcon   = document.getElementById('btnIcon');
+            const successEl = document.getElementById('formSuccess');
+            const errorEl   = document.getElementById('formError');
+
+            successEl.style.display = 'none';
+            errorEl.style.display   = 'none';
+            btn.disabled        = true;
+            btnText.textContent = 'Envoi en cours…';
+            btnIcon.className   = 'fas fa-spinner fa-spin';
+
+            try {
+                const res = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (res.ok) {
+                    successEl.style.display = 'flex';
+                    contactForm.reset();
+                } else {
+                    errorEl.style.display = 'flex';
+                }
+            } catch {
+                errorEl.style.display = 'flex';
+            } finally {
+                btn.disabled        = false;
+                btnText.textContent = 'Envoyer le message';
+                btnIcon.className   = 'fas fa-paper-plane';
+            }
+        });
+    }
+</script>
+</body>
+</html>
